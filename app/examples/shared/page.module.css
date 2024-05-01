@@ -1,0 +1,43 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: calc(100% - 40px);
+  gap: 20px;
+  margin: 20px;
+}
+
+.column > * {
+  border-radius: 16px;
+  overflow: hidden;
+  width: 100%;
+  flex: 1;
+}
+
+.chatContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: white;
+}
+
+.chat {
+  max-width: 600px;
+  width: 100%;
+  height: 100%;
+}

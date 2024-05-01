@@ -1,0 +1,78 @@
+.fileViewer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  background-color: #efefef;
+  overflow: hidden;
+  border-radius: 16px;
+}
+
+.filesList {
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.fileEntry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ececf1;
+  gap: 16px;
+  width: 100%;
+}
+
+.fileName {
+  flex-grow: 1;
+}
+.fileStatus {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.fileDeleteIcon {
+  cursor: pointer;
+}
+
+.fileUploadContainer {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+.fileUploadBtn {
+  background-color: #000;
+  color: white;
+  padding: 8px 24px;
+  border-radius: 32px;
+  text-align: center;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.fileUploadInput {
+  display: none;
+}
+
+.title {
+  font-size: 1.2em;
+  font-weight: 600;
+}
+
+.fileName {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
