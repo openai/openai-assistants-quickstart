@@ -4,8 +4,6 @@ A quick-start template using the OpenAI [Assistants API](https://platform.openai
 <br/>
 ![openai_assistants_quickstart](https://github.com/openai/openai-assistants-quickstart-internal/assets/25421602/3ea9c3d9-2bc6-410a-a7bf-dcae03cae899)
 
-
-
 ## Quickstart Setup
 
 ### 1. Clone repo
@@ -31,6 +29,11 @@ npm run dev
 ```
 
 ### 5. Navigate to [http://localhost:3000](http://localhost:3000).
+
+## Deployment
+
+You can deploy this project to Vercel or any other platform that supports Next.js.
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopenai%2Fopenai-assistants-quickstart&env=OPENAI_API_KEY,OPENAI_ASSISTANT_ID&envDescription=API%20Keys%20and%20Instructions&envLink=https%3A%2F%2Fgithub.com%2Fopenai%2Fopenai-assistants-quickstart%2Fblob%2Fmain%2F.env.example)
 
 ## Overview
 
