@@ -1,7 +1,5 @@
-import OpenAI from "openai";
-import { assistantId } from "../../../assistant-config";
-
-const openai = new OpenAI();
+import { assistantId } from "@/app/assistant-config";
+import { openai } from "@/app/openai";
 
 // upload file to assistant's vector store
 export async function POST(request) {
@@ -41,7 +39,7 @@ export async function GET() {
       };
     })
   );
-  return new Response(JSON.stringify(filesArray));
+  return Response.json(filesArray);
 }
 
 // delete file from assistant's vector store
