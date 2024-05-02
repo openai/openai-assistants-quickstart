@@ -2,7 +2,7 @@
 A quick-start template using the OpenAI [Assistants API](https://platform.openai.com/docs/assistants/overview) with [Next.js](https://nextjs.org/docs).
 <br/>
 <br/>
-![openai_assistants_quickstart](https://github.com/openai/openai-assistants-quickstart-internal/assets/25421602/3ea9c3d9-2bc6-410a-a7bf-dcae03cae899)
+![OpenAI Assistants API Quickstart](https://github.com/openai/openai-assistants-quickstart/assets/27232/755e85e9-3ea4-421f-b202-3b0c435ea270)
 
 
 
