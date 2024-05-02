@@ -1,4 +1,5 @@
 # OpenAI Assistants API Quickstart
+
 A quick-start template using the OpenAI [Assistants API](https://platform.openai.com/docs/assistants/overview) with [Next.js](https://nextjs.org/docs).
 <br/>
 <br/>
@@ -7,23 +8,29 @@ A quick-start template using the OpenAI [Assistants API](https://platform.openai
 ## Quickstart Setup
 
 ### 1. Clone repo
+
 ```shell
 git clone https://github.com/openai/openai-assistants-quickstart.git
 cd openai-assistants-quickstart
 ```
 
-### 2. Set your [OpenAI API key](https://platform.openai.com/api-keys)
-```shell
-export OPENAI_API_KEY="sk_..."
+### 2. Set your [OpenAI API key](https://platform.openai.com/api-keys) and [OpenAI Assistant ID](https://platform.openai.com/account/assistants)
+
+Copy `.env.example` and rename it to `.env` and enter your API keys. When you create an OpenAI Assistant, **be sure to enable file search and code interpreter tools.**
+
+```env
+OPENAI_API_KEY="sk-123..."
+OPENAI_ASSISTANT_ID="123..."
 ```
-(or in `.env.example` and rename it to `.env`).
 
 ### 3. Install dependencies
+
 ```shell
 npm install
 ```
 
 ### 4. Run
+
 ```shell
 npm run dev
 ```
@@ -63,5 +70,4 @@ The main logic for chat will be found in the `Chat` component in `app/components
 
 ## Feedback
 
-Let us know if you have any thoughts, questions, or feedback in [this form]([https://docs.google.com/forms/d/e/1FAIpQLSdquOq8U8cvqL4EVCXuJ3oPag2w7KySsC0PLxv6VAHon6smrw/viewform?usp=sf_link](https://docs.google.com/forms/d/e/1FAIpQLScn_RSBryMXCZjCyWV4_ebctksVvQYWkrq90iN21l1HLv3kPg/viewform?usp=sf_link))!
-
+Let us know if you have any thoughts, questions, or feedback in [this form](<[https://docs.google.com/forms/d/e/1FAIpQLSdquOq8U8cvqL4EVCXuJ3oPag2w7KySsC0PLxv6VAHon6smrw/viewform?usp=sf_link](https://docs.google.com/forms/d/e/1FAIpQLScn_RSBryMXCZjCyWV4_ebctksVvQYWkrq90iN21l1HLv3kPg/viewform?usp=sf_link)>)!
