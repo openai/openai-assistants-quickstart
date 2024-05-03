@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, ReactNode, MouseEventHandler } from "react";
 import styles from "./chat.module.css";
 import { AssistantStream } from "openai/lib/AssistantStream";
-import Markdown, { Options, defaultUrlTransform } from "react-markdown";
+import Markdown from "react-markdown";
 // @ts-expect-error - no types for this yet
 import { AssistantStreamEvent } from "openai/resources/beta/assistants/assistants";
 import { RequiredActionFunctionToolCall } from "openai/resources/beta/threads/runs/runs";
@@ -17,35 +17,10 @@ const UserMessage = ({ text }: { text: string }) => {
   return <div className={styles.userMessage}>{text}</div>;
 };
 
-const markdownOptions: Options = {
-  components:{
-    a(props) {
-      const { href } = props;
-      if (href.indexOf('fileid:') === 0) {
-        const fileId = href.replace('fileid:', '');
-        const fileLink = `/api/files/${fileId}`;
-        return <a {...props} target="_blank" href={fileLink} />;
-      }
-      return <a {...props} target="_blank" />;
-    },
-
-    img(props) {
-      return <a href={props.src} target="_blank"><img {...props} className={styles.chatImageContent} /></a>;
-    }
-  },
-
-  urlTransform(url) {
-    if (url.indexOf('fileid:') === 0) {
-      return url;
-    }
-    return defaultUrlTransform(url);
-  }
-}
-
 const AssistantMessage = ({ text }: { text: string }) => {
   return (
     <div className={styles.assistantMessage}>
-      <Markdown {...markdownOptions}>{text}</Markdown>
+      <Markdown>{text}</Markdown>
     </div>
   );
 };
@@ -264,7 +239,7 @@ const Chat = ({
         if (annotation.type === 'file_path') {
           updatedLastMessage.text = updatedLastMessage.text.replaceAll(
             annotation.text,
-            `fileid:${annotation.file_path.file_id}`
+            `/api/files/${annotation.file_path.file_id}`
           );
         }
       })

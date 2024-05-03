@@ -62,6 +62,11 @@
   max-width: 80%;
 }
 
+.assistantMessage img {
+  max-width: 100%;
+  padding: 8px 0px 8px 0px;
+}
+
 .userMessage {
   align-self: flex-end;
   color: #fff;
@@ -86,9 +91,4 @@
 .codeMessage span {
   color: #b8b8b8;
   margin-right: 8px;
-}
-
-.chatImageContent {
-  max-width: 100%;
-  padding: 8px 0px 8px 0px;
 }
