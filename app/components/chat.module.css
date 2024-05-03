@@ -60,11 +60,13 @@
   align-self: flex-start;
   border-radius: 15px;
   max-width: 80%;
+  overflow-wrap: break-word;
 }
 
 .assistantMessage img {
   max-width: 100%;
-  padding: 8px 0px 8px 0px;
+  margin: 8px 0px 8px 0px;
+  border-radius: 8px;
 }
 
 .userMessage {
