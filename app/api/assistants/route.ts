@@ -1,5 +1,4 @@
-import OpenAI from "openai";
-const openai = new OpenAI();
+import { openai } from "@/app/openai";
 
 export const runtime = "nodejs";
 
@@ -35,5 +34,5 @@ export async function POST() {
       { type: "file_search" },
     ],
   });
-  return new Response(JSON.stringify({ assistantId: assistant.id }));
+  return Response.json({ assistantId: assistant.id });
 }
