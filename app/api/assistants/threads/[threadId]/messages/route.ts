@@ -12,7 +12,7 @@ export async function POST(request, { params: { threadId } }) {
     content: content,
   });
 
-  const stream = openai.beta.threads.runs.createAndStream(threadId, {
+  const stream = openai.beta.threads.runs.stream(threadId, {
     assistant_id: assistantId,
   });
 
