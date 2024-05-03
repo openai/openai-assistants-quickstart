@@ -140,8 +140,18 @@ const Chat = ({
 
   // textDelta - append text to last assistant message
   const handleTextDelta = (delta) => {
-    appendToLastMessage(delta.value);
+    if (delta.value != null) {
+      appendToLastMessage(delta.value);
+    };
+    if (delta.annotations != null) {
+      annotateLastMessage(delta.annotations);
+    }
   };
+
+  // imageFileDone - show image in chat
+  const handleImageFileDone = (image) => {
+    appendToLastMessage(`\n![${image.file_id}](/api/files/${image.file_id})\n`);
+  }
 
   // toolCallCreated - log new tool call
   const toolCallCreated = (toolCall) => {
@@ -183,6 +193,9 @@ const Chat = ({
     stream.on("textCreated", handleTextCreated);
     stream.on("textDelta", handleTextDelta);
 
+    // image
+    stream.on("imageFileDone", handleImageFileDone);
+
     // code interpreter
     stream.on("toolCallCreated", toolCallCreated);
     stream.on("toolCallDelta", toolCallDelta);
@@ -215,6 +228,25 @@ const Chat = ({
   const appendMessage = (role, text) => {
     setMessages((prevMessages) => [...prevMessages, { role, text }]);
   };
+
+  const annotateLastMessage = (annotations) => {
+    setMessages((prevMessages) => {
+      const lastMessage = prevMessages[prevMessages.length - 1];
+      const updatedLastMessage = {
+        ...lastMessage,
+      };
+      annotations.forEach((annotation) => {
+        if (annotation.type === 'file_path') {
+          updatedLastMessage.text = updatedLastMessage.text.replaceAll(
+            annotation.text,
+            `/api/files/${annotation.file_path.file_id}`
+          );
+        }
+      })
+      return [...prevMessages.slice(0, -1), updatedLastMessage];
+    });
+    
+  }
 
   return (
     <div className={styles.chatContainer}>
