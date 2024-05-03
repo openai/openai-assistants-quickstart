@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, ReactNode, MouseEventHandler } from "react";
 import styles from "./chat.module.css";
 import { AssistantStream } from "openai/lib/AssistantStream";
-import Markdown from "react-markdown";
+import Markdown, { Options, defaultUrlTransform } from "react-markdown";
 // @ts-expect-error - no types for this yet
 import { AssistantStreamEvent } from "openai/resources/beta/assistants/assistants";
 import { RequiredActionFunctionToolCall } from "openai/resources/beta/threads/runs/runs";
@@ -17,10 +17,31 @@ const UserMessage = ({ text }: { text: string }) => {
   return <div className={styles.userMessage}>{text}</div>;
 };
 
+const markdownOptions: Options = {
+  components:{
+    a(props) {
+      const { href } = props;
+      if (href.indexOf('fileid:') === 0) {
+        const fileId = href.replace('fileid:', '');
+        const fileLink = `/api/files/${fileId}`;
+        return <a {...props} target="_blank" href={fileLink} />;
+      }
+      return <a {...props} target="_blank" />;
+    }
+  },
+
+  urlTransform(url) {
+    if (url.indexOf('fileid:') === 0) {
+      return url;
+    }
+    return defaultUrlTransform(url);
+  }
+}
+
 const AssistantMessage = ({ text }: { text: string }) => {
   return (
     <div className={styles.assistantMessage}>
-      <Markdown>{text}</Markdown>
+      <Markdown {...markdownOptions}>{text}</Markdown>
     </div>
   );
 };
@@ -140,7 +161,12 @@ const Chat = ({
 
   // textDelta - append text to last assistant message
   const handleTextDelta = (delta) => {
-    appendToLastMessage(delta.value);
+    if (delta.value != null) {
+      appendToLastMessage(delta.value);
+    };
+    if (delta.annotations != null) {
+      annotateLastMessage(delta.annotations);
+    }
   };
 
   // toolCallCreated - log new tool call
@@ -215,6 +241,25 @@ const Chat = ({
   const appendMessage = (role, text) => {
     setMessages((prevMessages) => [...prevMessages, { role, text }]);
   };
+
+  const annotateLastMessage = (annotations) => {
+    setMessages((prevMessages) => {
+      const lastMessage = prevMessages[prevMessages.length - 1];
+      const updatedLastMessage = {
+        ...lastMessage,
+      };
+      annotations.forEach((annotation) => {
+        if (annotation.type === 'file_path') {
+          updatedLastMessage.text = updatedLastMessage.text.replaceAll(
+            annotation.text,
+            `fileid:${annotation.file_path.file_id}`
+          );
+        }
+      })
+      return [...prevMessages.slice(0, -1), updatedLastMessage];
+    });
+    
+  }
 
   return (
     <div className={styles.chatContainer}>
