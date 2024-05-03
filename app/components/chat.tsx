@@ -27,6 +27,10 @@ const markdownOptions: Options = {
         return <a {...props} target="_blank" href={fileLink} />;
       }
       return <a {...props} target="_blank" />;
+    },
+
+    img(props) {
+      return <a href={props.src} target="_blank"><img {...props} className={styles.chatImageContent} /></a>;
     }
   },
 
@@ -169,6 +173,11 @@ const Chat = ({
     }
   };
 
+  // imageFileDone - show image in chat
+  const handleImageFileDone = (image) => {
+    appendToLastMessage(`\n![${image.file_id}](/api/files/${image.file_id})\n`);
+  }
+
   // toolCallCreated - log new tool call
   const toolCallCreated = (toolCall) => {
     if (toolCall.type != "code_interpreter") return;
@@ -208,6 +217,9 @@ const Chat = ({
     // messages
     stream.on("textCreated", handleTextCreated);
     stream.on("textDelta", handleTextDelta);
+
+    // image
+    stream.on("imageFileDone", handleImageFileDone);
 
     // code interpreter
     stream.on("toolCallCreated", toolCallCreated);
