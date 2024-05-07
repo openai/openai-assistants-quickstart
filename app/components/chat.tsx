@@ -66,7 +66,7 @@ const Chat = ({
   const [threadId, setThreadId] = useState("");
 
   // automatically scroll to bottom of chat
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
