@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import { useDropzone } from "react-dropzone";
 import styles from "./file-viewer.module.css";
 
 const TrashIcon = () => (
@@ -42,17 +43,25 @@ const FileViewer = () => {
       method: "DELETE",
       body: JSON.stringify({ fileId }),
     });
+    fetchFiles();
   };
 
-  const handleFileUpload = async (event) => {
-    const data = new FormData();
-    if (event.target.files.length < 0) return;
-    data.append("file", event.target.files[0]);
-    await fetch("/api/assistants/files", {
-      method: "POST",
-      body: data,
-    });
-  };
+  const onDrop = useCallback(async (acceptedFiles) => {
+    for (const file of acceptedFiles) {
+      const data = new FormData();
+      data.append("file", file);
+      await fetch("/api/assistants/files", {
+        method: "POST",
+        body: data,
+      });
+    }
+    fetchFiles();
+  }, []);
+
+  const { getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    multiple: true,
+  });
 
   return (
     <div className={styles.fileViewer}>
@@ -78,17 +87,10 @@ const FileViewer = () => {
         )}
       </div>
       <div className={styles.fileUploadContainer}>
-        <label htmlFor="file-upload" className={styles.fileUploadBtn}>
-          Attach files
-        </label>
-        <input
-          type="file"
-          id="file-upload"
-          name="file-upload"
-          className={styles.fileUploadInput}
-          multiple
-          onChange={handleFileUpload}
-        />
+        <div {...getRootProps({ className: styles.dropzone })}>
+          <input {...getInputProps()} />
+          <p>Drag your files here or click to upload</p>
+        </div>
       </div>
     </div>
   );
