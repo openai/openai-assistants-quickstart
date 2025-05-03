@@ -1,76 +1,60 @@
-# OpenAI Assistants API Quickstart
-#
-#
-#
+# DrPepe.ai: Your Jarvis for Longevity
 
-A quick-start template using the OpenAI [Assistants API](https://platform.openai.com/docs/assistants/overview) with [Next.js](https://nextjs.org/docs).
-<br/>
-<br/>
-![OpenAI Assistants API Quickstart](https://github.com/openai/openai-assistants-quickstart/assets/27232/755e85e9-3ea4-421f-b202-3b0c435ea270)
+DrPepe.ai is an AI-driven personal longevity agent—your Jarvis for healthspan and lifespan optimization. By ingesting wearable data, diagnostics, and a peer-reviewed knowledge base, DrPepe.ai delivers evidence-backed recommendations, automates supplement and pharmaceutical protocols, and continuously adapts to your evolving biology.
 
-## Quickstart Setup
 
-### 1. Clone repo
+## 📋 Project Overview
 
-```shell
-git clone https://github.com/openai/openai-assistants-quickstart.git
-cd openai-assistants-quickstart
+### Immortality Framework
+
+* **Central Hub**: The DrPepe.ai agent orchestrates data flow and decision-making.
+* **Knowledge Engine**: A community-curated, peer-reviewed longevity database powering recommendations.
+* **Inputs**:
+
+* **Wearable Data**: Real-time biofeedback (HRV, sleep, activity).
+* **Diagnostics**: 100+ biomarkers, biological age assessments, health risk profiles.
+* **Outputs**:
+
+* **Supplement & Pharma Automation**: Curated, evidence-backed supplements and DTC pharmaceuticals delivered via affiliate links and licensed provider workflows.
+* **Feedback Loop**: Continuous data ingestion and periodic diagnostics drive dynamic protocol adjustments.
+
+## 🏗 Architecture
+
+```
+[Wearables] → DrPepe.ai Agent → [Immortality DB]
+      ↳ Diagnostics →          ↖︎
+                ↳ Recommendations → [Supplements / Pharma API]
 ```
 
-### 2. Set your [OpenAI API key](https://platform.openai.com/api-keys)
+1. **Frontend**: Next.js, React, Tailwind CSS
+2. **API Layer**: Next.js API Routes + OpenAI Assistants API
+3. **Data Integrations**: Webhooks and SDKs for wearables & diagnostics
+4. **Persistence**: MongoDB (user profiles, history), Immortality DB for research
 
-```shell
-export OPENAI_API_KEY="sk_..."
-```
+## 🔧 Key Components
 
-(or in `.env.example` and rename it to `.env`).
+* `app/components/Chat.tsx` — Chat UI with streaming & function calling
+* `app/components/WearableSync.tsx` — Wearable data ingestion
+* `app/components/DiagnosticsViewer.tsx` — Biomarker report rendering
+* `pages/api/ai-agent/*` — Endpoints for assistant threads and actions
+* `lib/immortality-db.js` — DB client & query helpers
 
-### 3. Install dependencies
+## 🛠 Features
 
-```shell
-npm install
-```
+* **Conversational Longevity Advisor**: Ask questions and get evidence-based responses.
+* **Automated Protocols**: Schedule and manage supplement deliveries and DTC prescriptions.
+* **Real-time Feedback**: Adjust protocols based on incoming wearable and diagnostic data.
+* **Pay-per-Query Billing**: Lightweight billing system for on-demand AI interactions.
 
-### 4. Run
 
-```shell
-npm run dev
-```
+## 🤝 Contributing
 
-### 5. Navigate to [http://localhost:3000](http://localhost:3000).
+We welcome contributions! Please fork the repo, create a feature branch, and submit a PR. Check the [Contributing Guidelines](CONTRIBUTING.md) for details.
 
-## Deployment
+## 📄 License
 
-You can deploy this project to Vercel or any other platform that supports Next.js.
+This project is licensed under the MIT License. See [LICENSE.md](LICENSE.md) for details.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fopenai%2Fopenai-assistants-quickstart&env=OPENAI_API_KEY,OPENAI_ASSISTANT_ID&envDescription=API%20Keys%20and%20Instructions&envLink=https%3A%2F%2Fgithub.com%2Fopenai%2Fopenai-assistants-quickstart%2Fblob%2Fmain%2F.env.example)
+---
 
-## Overview
-
-This project is intended to serve as a template for using the Assistants API in Next.js with [streaming](https://platform.openai.com/docs/assistants/overview/step-4-create-a-run), tool use ([code interpreter](https://platform.openai.com/docs/assistants/tools/code-interpreter) and [file search](https://platform.openai.com/docs/assistants/tools/file-search)), and [function calling](https://platform.openai.com/docs/assistants/tools/function-calling). While there are multiple pages to demonstrate each of these capabilities, they all use the same underlying assistant with all capabilities enabled.
-
-The main logic for chat will be found in the `Chat` component in `app/components/chat.tsx`, and the handlers starting with `api/assistants/threads` (found in `api/assistants/threads/...`). Feel free to start your own project and copy some of this logic in! The `Chat` component itself can be copied and used directly, provided you copy the styling from `app/components/chat.module.css` as well.
-
-### Pages
-
-- Basic Chat Example: [http://localhost:3000/examples/basic-chat](http://localhost:3000/examples/basic-chat)
-- Function Calling Example: [http://localhost:3000/examples/function-calling](http://localhost:3000/examples/function-calling)
-- File Search Example: [http://localhost:3000/examples/file-search](http://localhost:3000/examples/file-search)
-- Full-featured Example: [http://localhost:3000/examples/all](http://localhost:3000/examples/all)
-
-### Main Components
-
-- `app/components/chat.tsx` - handles chat rendering, [streaming](https://platform.openai.com/docs/assistants/overview?context=with-streaming), and [function call](https://platform.openai.com/docs/assistants/tools/function-calling/quickstart?context=streaming&lang=node.js) forwarding
-- `app/components/file-viewer.tsx` - handles uploading, fetching, and deleting files for [file search](https://platform.openai.com/docs/assistants/tools/file-search)
-
-### Endpoints
-
-- `api/assistants` - `POST`: create assistant (only used at startup)
-- `api/assistants/threads` - `POST`: create new thread
-- `api/assistants/threads/[threadId]/messages` - `POST`: send message to assistant
-- `api/assistants/threads/[threadId]/actions` - `POST`: inform assistant of the result of a function it decided to call
-- `api/assistants/files` - `GET`/`POST`/`DELETE`: fetch, upload, and delete assistant files for file search
-
-## Feedback
-
-Let us know if you have any thoughts, questions, or feedback in [this form](https://docs.google.com/forms/d/e/1FAIpQLScn_RSBryMXCZjCyWV4_ebctksVvQYWkrq90iN21l1HLv3kPg/viewform?usp=sf_link)!
+Happy optimizing your longevity with DrPepe.ai! 🧬
