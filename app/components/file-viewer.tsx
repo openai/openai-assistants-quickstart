@@ -20,42 +20,94 @@ const TrashIcon = () => (
 
 const FileViewer = () => {
   const [files, setFiles] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const [message, setMessage] = useState(null);
 
   useEffect(() => {
+    fetchFiles(); // Initial fetch
     const interval = setInterval(() => {
       fetchFiles();
-    }, 1000);
+    }, 5000); // Polling every 5 seconds, was 1 second
 
     return () => clearInterval(interval);
   }, []);
 
   const fetchFiles = async () => {
-    const resp = await fetch("/api/assistants/files", {
-      method: "GET",
-    });
-    const data = await resp.json();
-    setFiles(data);
+    try {
+      setMessage(null);
+      const resp = await fetch("/api/assistants/files", {
+        method: "GET",
+      });
+      if (!resp.ok) {
+        throw new Error(`Failed to fetch files: ${resp.statusText}`);
+      }
+      const data = await resp.json();
+      setFiles(data);
+    } catch (error) {
+      console.error("Error fetching files:", error);
+      setMessage(`Error fetching files: ${error.message}`);
+    }
   };
 
   const handleFileDelete = async (fileId) => {
-    await fetch("/api/assistants/files", {
-      method: "DELETE",
-      body: JSON.stringify({ fileId }),
-    });
+    try {
+      setMessage(null);
+      const resp = await fetch("/api/assistants/files", {
+        method: "DELETE",
+        headers: { 'Content-Type': 'application/json' }, // Added header
+        body: JSON.stringify({ fileId }),
+      });
+      if (!resp.ok) {
+        throw new Error(`Failed to delete file: ${resp.statusText}`);
+      }
+      setMessage("File deleted successfully.");
+      fetchFiles(); // Refresh list after delete
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      setMessage(`Error deleting file: ${error.message}`);
+    }
   };
 
   const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
     const data = new FormData();
-    if (event.target.files.length < 0) return;
-    data.append("file", event.target.files[0]);
-    await fetch("/api/assistants/files", {
-      method: "POST",
-      body: data,
-    });
+    data.append("file", file);
+
+    setUploading(true);
+    setMessage(null);
+
+    try {
+      const resp = await fetch("/api/files/upload", {
+        method: "POST",
+        body: data,
+      });
+
+      // Reset file input so the same file can be re-uploaded if needed
+      event.target.value = null;
+
+      if (!resp.ok) {
+        const errorData = await resp.json().catch(() => ({ error: "Unknown error during upload" }));
+        throw new Error(errorData.error || `Failed to upload file: ${resp.statusText}`);
+      }
+      
+      const result = await resp.json();
+      setMessage(`File "${result.fileName}" uploaded successfully (ID: ${result.fileId}). It will appear in the list once processed by the assistant.`);
+      // The file list will update via polling, or if the assistant processing is quick.
+      // We could call fetchFiles() here, but let's rely on polling for now to show assistant processing status if any.
+      // Forcing an immediate fetchFiles() might show the file before OpenAI has fully processed/associated it.
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setMessage(`Error uploading file: ${error.message}`);
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
     <div className={styles.fileViewer}>
+      {message && <div className={styles.messageBanner + (message.toLowerCase().includes('error') ? ' ' + styles.errorBanner : ' ' + styles.successBanner)}>{message}</div>}
       <div
         className={`${styles.filesList} ${
           files.length !== 0 ? styles.grow : ""
@@ -78,16 +130,16 @@ const FileViewer = () => {
         )}
       </div>
       <div className={styles.fileUploadContainer}>
-        <label htmlFor="file-upload" className={styles.fileUploadBtn}>
-          Attach files
+        <label htmlFor="file-upload" className={styles.fileUploadBtn + (uploading ? ' ' + styles.disabled : '')}>
+          {uploading ? "Uploading..." : "Attach files"}
         </label>
         <input
           type="file"
           id="file-upload"
           name="file-upload"
           className={styles.fileUploadInput}
-          multiple
           onChange={handleFileUpload}
+          disabled={uploading}
         />
       </div>
     </div>

@@ -1,96 +1,273 @@
-.chatContainer {
-  display: flex;
-  flex-direction: column-reverse;
-  height: 100%;
-  width: 100%;
+/* General Reset / Base */
+.chatWrapper *,
+.chatWrapper *::before,
+.chatWrapper *::after {
+  box-sizing: border-box;
 }
 
-.inputForm {
-  display: flex;
-  width: 100%;
-  padding: 10px;
-  padding-bottom: 40px;
-  order: 1;
-}
-
-.input {
-  flex-grow: 1;
-  padding: 16px 24px;
-  margin-right: 10px;
-  border-radius: 60px;
-  border: 2px solid transparent;
-  font-size: 1em;
-  background-color: #efefef;
-}
-
-.input:focus {
-  outline: none !important;
-  border-color: #000;
-  background-color: white;
-}
-
-.button {
-  padding: 8px 24px;
-  background-color: #000;
-  color: white;
-  border: none;
-  font-size: 1em;
-  border-radius: 60px; /* Removed duplicate border-radius property */
-}
-
-.button:disabled {
-  background-color: lightgrey;
-}
-
-.messages {
-  flex-grow: 1;
-  overflow-y: auto;
-  padding: 10px;
+/* Chat Wrapper - Full screen, centered content */
+.chatWrapper {
   display: flex;
   flex-direction: column;
-  order: 2;
-  white-space: pre-wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%; /* Changed from 100vw to fill parent column */
+  height: 100%; /* Changed from 100vh to fill parent column */
+  /* padding: 20px; */ /* Padding is now handled by .main on the page or .chatColumn */
+  /* background-color: #f0f2f5; */ /* Background is now handled by .main on the page */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* Chat Panel - The main chat interface card */
+.chatPanel {
+  width: 100%;
+  max-width: 700px; /* Max width for readability */
+  height: 100%;
+  max-height: 800px; /* Max height */
+  background-color: #ffffff; /* White background for the panel */
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Clip child content like messagesArea scrolling */
+}
+
+/* Messages Area - Scrollable container for messages */
+.messagesArea {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Welcome Message */
+.welcomeMessage {
+  text-align: center;
+  margin: auto; /* Center vertically and horizontally in empty state */
+  padding: 20px;
+  color: #555;
+}
+.welcomeMessage h2 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Individual Message Wrappers (for alignment) */
+.userMessageWrapper,
+.assistantMessageWrapper,
+.codeMessageWrapper,
+.systemInfoMessageWrapper {
+  display: flex;
+  margin-bottom: 8px;
+}
+
+.userMessageWrapper {
+  justify-content: flex-end;
+}
+
+.assistantMessageWrapper {
+  justify-content: flex-start;
+}
+
+/* Message Bubbles */
 .userMessage,
-.assistantMessage,
-.codeMessage {
-  margin: 8px 0;
-  padding: 8px 16px;
-  align-self: flex-start;
-  border-radius: 15px;
-  max-width: 80%;
-  overflow-wrap: break-word;
-}
-
-.assistantMessage img {
-  max-width: 100%;
-  margin: 8px 0px 8px 0px;
-  border-radius: 8px;
+.assistantMessage {
+  padding: 10px 15px;
+  border-radius: 18px;
+  max-width: 75%;
+  line-height: 1.5;
+  word-wrap: break-word;
 }
 
 .userMessage {
-  align-self: flex-end;
-  color: #fff;
-  background-color: #000;
+  background-color: #007bff; /* Blue for user messages */
+  color: white;
+  border-top-right-radius: 4px; /* Slightly different rounding */
 }
 
 .assistantMessage {
-  background-color: #efefef;
+  background-color: #e9ecef; /* Light grey for assistant messages */
+  color: #333;
+  border-top-left-radius: 4px; /* Slightly different rounding */
 }
 
+/* Code Message */
+.codeMessageWrapper {
+  justify-content: flex-start; /* Or center, depending on preference */
+}
 .codeMessage {
-  padding: 10px 16px;
-  background-color: #e9e9e9;
-  font-family: monospace;
-  counter-reset: line;
+  background-color: #282c34; /* Dark background for code */
+  color: #abb2bf; /* Light text for code */
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  padding: 15px;
+  border-radius: 8px;
+  overflow-x: auto;
+  max-width: 100%; 
+  white-space: pre-wrap; /* Wrap long lines of code */
+  font-size: 0.9em;
 }
 
-.codeMessage > div {
-  margin-top: 4px;
+/* System Info Message (for errors, etc.) */
+.systemInfoMessage {
+  text-align: center;
+  color: #6c757d; /* Muted color */
+  font-size: 0.9em;
+  padding: 10px;
+  width: 100%;
 }
 
-.codeMessage span {
-  color: #b8b8b8;
-  margin-right: 8px;
+/* Upload Status Message */
+.uploadStatusMessage {
+  padding: 10px 20px;
+  margin: 0 20px 10px 20px; /* Add margin to not stick to input area or messages */
+  border-radius: 8px;
+  text-align: center;
+  font-size: 0.9em;
+}
+.uploadStatusMessage.success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+.uploadStatusMessage.error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+/* Input Area - Container for input field and buttons */
+.inputArea {
+  padding: 15px 20px;
+  background-color: #f8f9fa; /* Slightly different background for input section */
+  border-top: 1px solid #dee2e6;
+}
+
+.inputControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative; /* For popover positioning */
+}
+
+/* Icon Button (Paperclip) */
+.iconButton,
+.sendButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.iconButton:hover,
+.sendButton:hover:not(:disabled) {
+  background-color: #e9ecef;
+}
+
+.iconButton svg,
+.sendButton svg {
+  width: 22px; /* Consistent icon size */
+  height: 22px;
+  color: #555; /* Icon color */
+}
+.sendButton svg {
+ color: #007bff;
+}
+
+.iconButton:disabled,
+.sendButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* File Upload Popover */
+.fileUploadPopover {
+  position: absolute;
+  bottom: calc(100% + 10px); /* Position above the paperclip button */
+  left: 0;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 10;
+}
+
+.fileUploadPopover button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 6px;
+  font-size: 0.95em;
+  color: #333;
+}
+
+.fileUploadPopover button:hover {
+  background-color: #f0f2f5;
+}
+
+.fileUploadPopover button svg {
+  color: #555;
+}
+
+/* Text Input */
+.textInput {
+  flex-grow: 1;
+  padding: 12px 15px;
+  border: 1px solid #ced4da;
+  border-radius: 22px; /* Pill shape */
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textInput:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.textInput::placeholder {
+  color: #888;
+}
+
+/* Send Button Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(0, 123, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #007bff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Clearfix (Legacy, but might be used by styles.clearfix if it was there before) */
+.clearfix::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+/* Ensure markdown generated p has no extra margin if it's the only element */
+.assistantMessage > div > p:only-child,
+.userMessage > div > p:only-child {
+    margin: 0;
 }

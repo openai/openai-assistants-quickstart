@@ -1,13 +1,56 @@
+/* Remove or simplify existing styles as chat.module.css now handles the main layout */
+
 .main {
-  display: flex;
+  display: flex; /* Use flex to center pageContainer if needed, or just manage overall page flow */
   justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background-color: white;
+  align-items: flex-start; /* Align items to the top */
+  width: 100%;
+  min-height: 100vh; /* Ensure it takes at least full viewport height */
+  padding: 20px; /* Add some padding around the pageContainer */
+  background-color: #f0f2f5; /* Match the chatWrapper background for consistency */
 }
 
-.container {
-  max-width: 700px;
+.pageContainer {
+  display: flex;
+  flex-direction: row; /* Arrange columns side-by-side */
   width: 100%;
-  height: 100%;
+  max-width: 1200px; /* Max width for the entire page content (chat + file viewer) */
+  height: 100%; 
+  max-height: calc(100vh - 40px); /* Adjust based on padding, aims for near full viewport height */
+  gap: 20px; /* Space between chat column and file viewer column */
+}
+
+.chatColumn {
+  flex: 2; /* Chat column takes up more space */
+  display: flex; /* To make the Chat component fill this column */
+  flex-direction: column;
+  height: 100%; /* Make chat column take full height of pageContainer */
+  min-width: 400px; /* Minimum width for chat */
+}
+
+/* Let chat.tsx handle its internal .chatWrapper and .chatPanel styling for height/max-height */
+/* The .chatWrapper inside Chat component should have its height set to 100% 
+   so it fills the .chatColumn. The .chatPanel will then control its own max-height. */
+
+.fileViewerColumn {
+  flex: 1; /* File viewer column takes less space */
+  display: flex; /* To make the FileViewer component fill this column */
+  flex-direction: column;
+  height: 100%; /* Make file viewer take full height of pageContainer */
+  min-width: 300px; /* Minimum width for file viewer */
+  background-color: #ffffff; /* Give FileViewer its own panel background if needed */
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Consistent shadow */
+  overflow: hidden; /* If FileViewer content might overflow */
+}
+
+/* The FileViewer component itself has styles.fileViewer which likely sets height to 100%.
+   If not, or if more control is needed, target styles.fileViewer here or within its own module. */
+
+/* Remove old .container style if no longer used, or repurpose */
+.container { 
+  /* This class was previously used to wrap Chat. 
+     It might be entirely replaced by pageContainer, chatColumn, etc. 
+     If it's still in the JSX (it was removed in the last step), 
+     ensure its styles don't conflict or remove it from JSX. */
 }
