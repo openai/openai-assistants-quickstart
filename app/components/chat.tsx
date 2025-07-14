@@ -258,7 +258,7 @@ const Chat = ({
       </div>
       <form
         onSubmit={handleSubmit}
-        className={`${styles.inputForm} ${styles.clearfix}`}
+        className={styles.inputForm}
       >
         <input
           type="text"
