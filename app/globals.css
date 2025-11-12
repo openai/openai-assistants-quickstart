@@ -1,6 +1,8 @@
+/* === EXU Font Import === */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap');
 :root {
   --max-width: 1100px;
-  --border-radius: 12px;
+  --border-radius: 5px;
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
@@ -15,7 +17,9 @@
 html,
 body {
   max-width: 100vw;
+  background: #000;        /* match your theme */
   overflow-x: hidden;
+ 
 }
 
 body {
@@ -44,7 +48,7 @@ a {
   width: 32px;
   height: 32px;
   position: absolute;
-  margin: 16px;
+  margin: 1px;
   top: 0;
   right: 0;
 }
@@ -70,4 +74,105 @@ pre {
   white-space: pre-wrap;
   background-color: #e4e4e4;
   color: black;
+}
+/* === Custom scrollbars (works in Chrome, Edge, Safari, Firefox) === */
+
+/* Firefox */
+* {
+  scrollbar-width: thin;                 /* thin track */
+  scrollbar-color: #6c002b #000000;      /* white knob, black track */
+}
+
+/* WebKit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;                           /* if any horizontal bars show */
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;                    /* black track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #84002a;              /* white knob */
+  border-radius: 10px;
+  border: 2px solid #000000;              /* black ring around knob */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #59001c;              /* subtle hover */
+}
+
+/* If a nested container is the one that scrolls, style it explicitly too */
+.main::-webkit-scrollbar,
+.chatContainer::-webkit-scrollbar,
+.messages::-webkit-scrollbar,
+.messagesContainer::-webkit-scrollbar {
+  width: 10px;
+}
+.main::-webkit-scrollbar-track,
+.chatContainer::-webkit-scrollbar-track,
+.messages::-webkit-scrollbar-track,
+.messagesContainer::-webkit-scrollbar-track {
+  background: #000000;
+}
+.main::-webkit-scrollbar-thumb,
+.chatContainer::-webkit-scrollbar-thumb,
+.messages::-webkit-scrollbar-thumb,
+.messagesContainer::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 2px solid #000000;
+}
+/* === EXU Chat Font Styling === */
+body, input, textarea, button {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.message, .assistantMessage, .userMessage, .chatInput {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.message.assistant {
+  font-weight: 500;
+  color: #ffd700; /* gold for assistant responses */
+}
+
+.message.user {
+  color: #00ffff; /* cyan for user messages */
+}
+
+.chatInput::placeholder {
+  color: #888;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
+}
+/* === EXU Chat Font Styling === */
+body, input, textarea, button {
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.message, .assistantMessage, .userMessage, .chatInput {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.message.assistant {
+  font-weight: 500;
+  color: #ffd700; /* gold for assistant responses */
+}
+
+.message.user {
+  color: #00ffff; /* cyan for user messages */
+}
+
+.chatInput::placeholder {
+  color: #888;
+  font-family: 'Orbitron', sans-serif;
+  letter-spacing: 1px;
 }

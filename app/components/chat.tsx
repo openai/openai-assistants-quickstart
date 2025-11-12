@@ -7,6 +7,11 @@ import Markdown from "react-markdown";
 // @ts-expect-error - no types for this yet
 import { AssistantStreamEvent } from "openai/resources/beta/assistants/assistants";
 import { RequiredActionFunctionToolCall } from "openai/resources/beta/threads/runs/runs";
+const exuHeaders = {
+  'Content-Type': 'application/json',
+  'X-EXU-Embed-Key': process.env.NEXT_PUBLIC_EMBED_TOKEN || '',
+} as HeadersInit;
+
 
 type MessageProps = {
   role: "user" | "assistant" | "code";
@@ -65,20 +70,22 @@ const Chat = ({
   const [inputDisabled, setInputDisabled] = useState(false);
   const [threadId, setThreadId] = useState("");
 
-  // automatically scroll to bottom of chat
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  // Scroll only the messages container (not the whole page)
+const messagesWrapRef = useRef<HTMLDivElement | null>(null);
+
+const scrollMessagesToBottom = () => {
+  const el = messagesWrapRef.current;
+  if (!el) return;
+  el.scrollTo({ top: el.scrollHeight, behavior: "smooth" });
+};
+
 
   // create a new threadID when chat component created
   useEffect(() => {
     const createThread = async () => {
       const res = await fetch(`/api/assistants/threads`, {
         method: "POST",
+        headers: exuHeaders,
       });
       const data = await res.json();
       setThreadId(data.threadId);
@@ -91,6 +98,7 @@ const Chat = ({
       `/api/assistants/threads/${threadId}/messages`,
       {
         method: "POST",
+        headers: exuHeaders,
         body: JSON.stringify({
           content: text,
         }),
@@ -128,7 +136,7 @@ const Chat = ({
     ]);
     setUserInput("");
     setInputDisabled(true);
-    scrollToBottom();
+    requestAnimationFrame(() => scrollMessagesToBottom());
   };
 
   /* Stream Event Handlers */
@@ -146,11 +154,15 @@ const Chat = ({
     if (delta.annotations != null) {
       annotateLastMessage(delta.annotations);
     }
+    //
+    scrollMessagesToBottom();
   };
 
   // imageFileDone - show image in chat
   const handleImageFileDone = (image) => {
     appendToLastMessage(`\n![${image.file_id}](/api/files/${image.file_id})\n`);
+    // add this
+    scrollMessagesToBottom();
   }
 
   // toolCallCreated - log new tool call
@@ -249,32 +261,36 @@ const Chat = ({
   }
 
   return (
+    
     <div className={styles.chatContainer}>
-      <div className={styles.messages}>
-        {messages.map((msg, index) => (
-          <Message key={index} role={msg.role} text={msg.text} />
-        ))}
-        <div ref={messagesEndRef} />
-      </div>
-      <form
-        onSubmit={handleSubmit}
-        className={`${styles.inputForm} ${styles.clearfix}`}
-      >
-        <input
-          type="text"
-          className={styles.input}
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          placeholder="Enter your question"
-        />
-        <button
-          type="submit"
-          className={styles.button}
-          disabled={inputDisabled}
-        >
-          Send
-        </button>
-      </form>
+<div className={styles.messages} ref={messagesWrapRef}>
+  {messages.map((msg, index) => (
+    <Message key={index} role={msg.role} text={msg.text} />
+  ))}
+</div>
+     <form onSubmit={handleSubmit} className={`${styles.inputForm} ${styles.clearfix}`}>
+  <div className={styles.inputWrapper}>
+    <input
+      type="text"
+      className={styles.input}
+      value={userInput}
+      onChange={(e) => setUserInput(e.target.value)}
+      placeholder="Ask & ye shall find, Seeker..."
+    />
+  </div>
+
+  {/* Keep your glow via styles.button; width via styles.buttonWide */}
+  <button
+    type="submit"
+    className={`${styles.button} ${styles.buttonWide}`}
+    disabled={inputDisabled}
+  >
+    Send
+  </button>
+</form>
+
+
+
     </div>
   );
 };

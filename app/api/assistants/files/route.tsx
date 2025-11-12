@@ -1,28 +1,33 @@
 import { assistantId } from "@/app/assistant-config";
 import { openai } from "@/app/openai";
 
-// upload file to assistant's vector store
-export async function POST(request) {
-  const formData = await request.formData(); // process file as FormData
-  const file = formData.get("file"); // retrieve the single file from FormData
-  const vectorStoreId = await getOrCreateVectorStore(); // get or create vector store
 
-  // upload using the file stream
+// upload file to assistant's vector store
+export async function POST(request: Request) {
+  const formData = await request.formData();               // process file as FormData
+  const file = formData.get("file") as File;               // the single uploaded file
+
+  const vectorStoreId = await getOrCreateVectorStore();    // get/create VS
+
+  // 1) upload the file to OpenAI Files
   const openaiFile = await openai.files.create({
-    file: file,
+    file,
     purpose: "assistants",
   });
 
-  // add file to vector store
+  // 2) attach it to the vector store
   await openai.beta.vectorStores.files.create(vectorStoreId, {
     file_id: openaiFile.id,
   });
+
   return new Response();
 }
 
+
 // list files in assistant's vector store
 export async function GET() {
-  const vectorStoreId = await getOrCreateVectorStore(); // get or create vector store
+  const vectorStoreId = await getOrCreateVectorStore();
+
   const fileList = await openai.beta.vectorStores.files.list(vectorStoreId);
 
   const filesArray = await Promise.all(
@@ -39,33 +44,38 @@ export async function GET() {
       };
     })
   );
+
   return Response.json(filesArray);
 }
 
-// delete file from assistant's vector store
-export async function DELETE(request) {
-  const body = await request.json();
-  const fileId = body.fileId;
 
-  const vectorStoreId = await getOrCreateVectorStore(); // get or create vector store
-  await openai.beta.vectorStores.files.del(vectorStoreId, fileId); // delete file from vector store
+// delete file from assistant's vector store
+export async function DELETE(request: Request) {
+  const body = await request.json();
+  const fileId = body.fileId as string;
+
+  const vectorStoreId = await getOrCreateVectorStore();
+  await openai.beta.vectorStores.files.del(vectorStoreId, fileId);
 
   return new Response();
 }
 
-/* Helper functions */
 
+
+  /* Helper functions */
 const getOrCreateVectorStore = async () => {
   const assistant = await openai.beta.assistants.retrieve(assistantId);
 
-  // if the assistant already has a vector store, return it
+  // If the assistant already has a vector store, return it
   if (assistant.tool_resources?.file_search?.vector_store_ids?.length > 0) {
     return assistant.tool_resources.file_search.vector_store_ids[0];
   }
-  // otherwise, create a new vector store and attatch it to the assistant
+
+  // Otherwise, create a new vector store and attach it to the assistant
   const vectorStore = await openai.beta.vectorStores.create({
     name: "sample-assistant-vector-store",
   });
+
   await openai.beta.assistants.update(assistantId, {
     tool_resources: {
       file_search: {
@@ -73,5 +83,6 @@ const getOrCreateVectorStore = async () => {
       },
     },
   });
+
   return vectorStore.id;
 };
