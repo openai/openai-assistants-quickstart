@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const data = await callSamsaraOptimizer({ payload });
+    const data = await callSamsaraOptimizer({ payload: payload as Record<string, unknown> });
     return NextResponse.json(data);
   } catch (error) {
     console.error("Samsara optimization error", error);
