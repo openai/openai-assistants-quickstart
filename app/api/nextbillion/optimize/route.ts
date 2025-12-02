@@ -27,7 +27,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const data = await callNextBillionOptimizer({ payload });
+    const data = await callNextBillionOptimizer({ payload: payload as Record<string, unknown> });
     return NextResponse.json(data);
   } catch (error) {
     console.error("NextBillion optimization error", error);
