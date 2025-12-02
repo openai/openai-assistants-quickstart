@@ -6,7 +6,7 @@ import Chat from "../../components/chat";
 import WeatherWidget from "../../components/weather-widget";
 import { getWeather } from "../../utils/weather";
 import { handleBriostackCall } from "../../utils/briostack";
-import { callNextBillionOptimizer } from "../../utils/nextbillion";
+import { proxyOptimization } from "@/app/utils/optimization-client";
 import FileViewer from "../../components/file-viewer";
 
 const FunctionCalling = () => {
@@ -27,7 +27,9 @@ const FunctionCalling = () => {
       }
       if (call?.function?.name === "optimize_routes") {
         const args = JSON.parse(call.function.arguments);
-        const result = await callNextBillionOptimizer(args);
+        const provider =
+          args.provider === "samsara" ? "samsara" : "nextbillion";
+        const result = await proxyOptimization(args.payload, provider);
         return JSON.stringify(result);
       }
     } catch (err) {
