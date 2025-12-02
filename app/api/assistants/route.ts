@@ -65,18 +65,20 @@ export async function POST() {
         function: {
           name: "optimize_routes",
           description:
-            "Optimize technician routes using the NextBillion API",
+            "Optimize technician routes using server-side provider proxies",
           parameters: {
             type: "object",
             properties: {
               payload: {
                 type: "object",
                 description:
-                  "JSON body to send to NextBillion's route optimization API",
+                  "JSON body to send to the selected route optimization provider",
               },
-              apiKey: {
+              provider: {
                 type: "string",
-                description: "Optional NextBillion API key override",
+                enum: ["nextbillion", "samsara"],
+                description:
+                  "Route optimization provider to use (defaults to NextBillion)",
               },
             },
             required: ["payload"],

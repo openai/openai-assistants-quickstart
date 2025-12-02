@@ -35,10 +35,27 @@ export GHL_API_KEY="your-ghl-api-key"
 
 ### 3. Install dependencies
 
+Run the helper script (it accepts all normal `npm install` flags and lets you
+override the registry when you are behind a proxy):
+
 ```shell
-npm install
+./scripts/install-deps.sh
 ```
+
+If you prefer to call npm directly, this is equivalent to:
+
+```shell
+REGISTRY=https://registry.npmjs.org npm install --no-progress --no-fund --no-audit
+```
+
 You can also use `pnpm install` or `yarn` if you prefer those package managers.
+
+Troubleshooting registry or proxy errors (for example, `403 Forbidden - GET https://registry.npmjs.org/@sendgrid%2Fmail`):
+
+- Ensure your environment can reach `https://registry.npmjs.org` (or set
+  `REGISTRY=<your mirror>` when running the script above).
+- If you use an authenticated mirror, log in first: `npm login --registry <your mirror>`.
+- Clear your cache and retry: `npm cache clean --force && ./scripts/install-deps.sh`.
 
 Ensure this step completes while your environment still has network
 access so all required packages are downloaded.
@@ -150,12 +167,31 @@ This project also includes a helper for [NextBillion's Route Optimization API](h
 Use the `optimize_routes` function to post a JSON payload describing jobs and vehicles.
 The helper lives in `app/utils/nextbillion.ts` and reads `NEXTBILLION_API_KEY` from the environment.
 
+When you call `optimize_routes`, NextBillion considers the full set of vehicle-routing constraints you include in the payload. The request can describe:
+
+- **Depots and start/end locations** to anchor each route.
+- **Service times and time windows** on jobs, so stops respect earliest/latest start and on-site durations.
+- **Vehicle capacities** (multiple dimensions supported) alongside **job demands** to keep each route within its capacity limits.
+- **Maximum route durations or distances** per vehicle.
+- **Pickup → delivery precedences** (shipments) so paired jobs stay in order on the same route.
+- **Driver or vehicle skills/tags** to ensure only qualified vehicles are assigned to certain jobs.
+- **Priorities and penalties** that influence which jobs may be dropped versus must be served.
+- **Traffic-aware travel times** when you specify the matrix type and departure time, so ETAs account for real-world speeds.
+
+Structure your payload around these fields to give the optimizer the necessary rules for building practical routes.
+
+In this starter, clients post the payload to a server-side proxy at `/api/nextbillion/optimize`, which injects the server-held `NEXTBILLION_API_KEY` so secrets never reach the browser:
+
 ```ts
-import { callNextBillionOptimizer } from "./app/utils/nextbillion";
-const result = await callNextBillionOptimizer({ payload: { /* ... */ } });
+const res = await fetch("/api/nextbillion/optimize", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ payload: { /* ... */ } }),
+});
+const result = await res.json();
 ```
 
-You can experiment with this by calling `optimize_routes` in the example chats.
+You can experiment with this by calling `optimize_routes` in the example chats; the UI already proxies requests through the server route.
 
 
 ### Realtime API Demo

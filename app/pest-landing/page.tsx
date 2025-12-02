@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Chat from "../components/chat";
 import { handleBriostackCall } from "../utils/briostack";
-import { callNextBillionOptimizer } from "../utils/nextbillion";
+import { proxyOptimization } from "@/app/utils/optimization-client";
 import styles from "./page.module.css";
 
 const PestLanding = () => {
@@ -43,7 +43,9 @@ const PestLanding = () => {
       }
       if (call?.function?.name === "optimize_routes") {
         const args = JSON.parse(call.function.arguments);
-        const result = await callNextBillionOptimizer(args);
+        const provider =
+          args.provider === "samsara" ? "samsara" : "nextbillion";
+        const result = await proxyOptimization(args.payload, provider);
         return JSON.stringify(result);
       }
     } catch (err) {
