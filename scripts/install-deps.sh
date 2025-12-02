@@ -5,7 +5,7 @@ set -euo pipefail
 REGISTRY="${REGISTRY:-https://registry.npmjs.org}"
 
 if [[ -n "${REGISTRY}" ]]; then
-  echo "Using npm registry: ${REGISTRY}" >&2
+  printf "Using npm registry: %s\n" "${REGISTRY}" >&2
   export NPM_CONFIG_REGISTRY="${REGISTRY}"
 fi
 
