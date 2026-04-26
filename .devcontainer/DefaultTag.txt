@@ -1,0 +1,5 @@
+Dưới đây là mã theo dõi thẻ UET của Microsoft Advertising. Bạn cần thêm mã này vào toàn bộ website của mình ở phần đầu trang hoặc phần nội dung. Nếu website của bạn có một trang cái thì bạn có thể thêm mã này một lần vào trang cái để mã được thêm vào tất cả các trang.
+
+Xem mẹo tại http://help.ads.microsoft.com/#apex/3/en/56688/-1
+
+<script>(function(w,d,t,u,o){w[u]=w[u]||[],o.ts=(new Date).getTime();var n=d.createElement(t); n.src="https://bat.bing.net/bat.js?ti="+o.ti+("uetq"!=u?"&q="+u:""),n.async=1, n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&"loaded"!==s&&"complete"!==s||( o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad"),n.onload=n.onreadystatechange=null)}; var i=d.getElementsByTagName(t)[0];i.parentNode.insertBefore(n,i); })(window,document,"script","uetq",{ti:"211034116", enableAutoSpaTracking: true});</script>
