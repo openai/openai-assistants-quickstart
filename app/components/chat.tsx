@@ -270,7 +270,7 @@ const Chat = ({
         <button
           type="submit"
           className={styles.button}
-          disabled={inputDisabled}
+          disabled={inputDisabled || !userInput.trim()}
         >
           Send
         </button>
