@@ -8,16 +8,17 @@ const Warnings = () => {
   const [loading, setLoading] = useState(false);
   const [newAssistantId, setNewAssistantId] = useState("");
 
-  const fetchAssistantId = async () => {
-    setLoading(true);
+const fetchAssistantId = async () => {
+  setLoading(true);
 
+  try {
     const response = await fetch("/api/assistants", { method: "POST" });
     const data = await response.json();
     setNewAssistantId(data.assistantId);
-
+  } finally {
     setLoading(false);
-  };
-
+  }
+};
   return (
     <>
       {!assistantId && (
